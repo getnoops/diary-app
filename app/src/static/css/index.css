@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gradtest {
+  background: linear-gradient(90deg, #000 50%, rgba(0, 0, 0, 0) 50%),
+    linear-gradient(-90deg, #555 50%, rgba(0, 0, 0, 0) 50%);
+}
