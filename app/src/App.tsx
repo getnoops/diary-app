@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import reactLogo from "./assets/react.svg";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useCreateEntryMutation, useGetEntriesQuery } from "./static/queries";
-import { useQueryClient } from "@tanstack/react-query";
-import { PencilIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
-import { AnimatePresence, LayoutGroup, motion, Variants } from "framer-motion";
-import classNames from "classnames";
+import { DocumentIcon } from "@heroicons/react/24/outline";
+import { AnimatePresence, motion } from "framer-motion";
 import Pencil from "./components/Pencil";
 import WriteText from "./components/WriteText";
 
@@ -28,6 +25,12 @@ const schema = yup
   .required();
 
 // https://stackoverflow.com/questions/783899/how-can-i-count-text-lines-inside-an-dom-element-can-i
+
+function GetDate(date: string) {
+  let formatted = date.split(" ")[0].split("/").reverse().join("-");
+
+  return new Date(formatted).toLocaleDateString();
+}
 
 function App() {
   const [text, setText] = useState("");
@@ -53,7 +56,7 @@ function App() {
   };
 
   return (
-    <div className=" bg-slate-50 pt-24 pb-8">
+    <div className="min-h-screen bg-slate-50 pt-24 pb-8">
       <div className="mx-auto w-full max-w-6xl px-4 text-slate-700">
         <div className="my-2 flex items-end justify-between">
           <h1 className="text-2xl font-medium">Dear Diary...</h1>
@@ -71,7 +74,7 @@ function App() {
                 backgroundAttachment: "local",
               }}
               rows={6}
-              className="relative block w-full rounded-md border-gray-300 bg-white leading-7 shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500"
+              className="relative block w-full rounded-md border-slate-300 bg-white leading-7 shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500"
             ></textarea>
             <p className="text-sm font-medium text-red-700">
               {errors.text?.message}
@@ -133,6 +136,16 @@ function App() {
 
         <div className="space-y-4">
           <h1 className="text-xl font-medium">Pages</h1>
+
+          {!entriesData && (
+            <div className="relative block w-full rounded-lg border-2 border-dashed border-slate-300 p-12 text-center hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              <DocumentIcon className="mx-auto h-12 w-12 text-slate-400" />
+              <span className="mt-2 block text-sm font-semibold text-slate-600">
+                No pages yet <br />
+                Write your first page above
+              </span>
+            </div>
+          )}
           <div className="grid grid-cols-3 gap-4">
             <AnimatePresence>
               {entriesData &&
@@ -157,7 +170,7 @@ function App() {
                       <div className="flex items-end justify-between">
                         <p className="font-medium">Dear Diary...</p>
                         <p className="text-sm text-slate-600">
-                          {new Date(entry.dateTime).toLocaleDateString()}
+                          {GetDate(entry.dateTime)}
                         </p>
                       </div>
                       <p className="pt-7 leading-7">{entry.text}</p>
